@@ -210,12 +210,13 @@ func main() {
 	// p, err := client.GetPoll(126809) //=> Actual Poll
 	// p, err := client.GetPart(8412605) //=> Story (wrong type)
 	// pp, err := client.GetPart(160705) //=> Actual Part of Poll
-	pp, err := client.GetPart(8412605) //=> Story (wrong type)
+	// pp, err := client.GetPart(8412605) //=> Story (wrong type)
+	u, err := client.GetUser("caser") //=> User
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(pp.Text, "\n", pp.Parent, "\n", pp.By)
+		fmt.Println(u.About, "\n", u.Created, "\n", u.Karma)
 	}
 
 	// write accessors to get stories, comments, polls, parts, and users
@@ -225,10 +226,36 @@ func main() {
 }
 
 type User struct {
-	about     string
-	created   int
-	delay     int
-	id        string
-	karma     int
-	submitted []int
+	About     string
+	Created   int
+	Delay     int
+	Id        string
+	Karma     int
+	Submitted []int
+}
+
+func (c Client) GetUser(id string) (User, error) {
+	// TODO - refactor URL call into separate method
+	url := c.BaseURI + c.Version + "/user/" + id + c.Suffix
+
+	response, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	defer response.Body.Close()
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	var u User
+
+	err = json.Unmarshal(body, &u)
+	if err != nil {
+		panic(err)
+	}
+
+	// TODO - other checking around errors (wrong type, nonexistent user, etc.)
+	return u, nil
 }
