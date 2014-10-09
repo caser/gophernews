@@ -33,6 +33,7 @@ type Comment struct {
 	Kids   []int
 	Parent int
 	Text   string
+	Time   int
 }
 
 type Poll struct {
@@ -215,6 +216,7 @@ func (i Item) ToComment() Comment {
 	c.Kids = i.Kids
 	c.Parent = i.Parent
 	c.Text = i.Text
+	c.Time = i.Time
 	return c
 }
 

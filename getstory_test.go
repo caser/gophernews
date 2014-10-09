@@ -1,10 +1,3 @@
-// TEST CASES
-
-// Test that getStory (comment, part, etc.) return error when ID is of a different type
-// and give back the type of the object with the given ID
-
-// Test other cases of wrong input (arguments of wrong type, etc.)
-
 package main
 
 import (
@@ -58,15 +51,3 @@ func TestGetStory(t *testing.T) {
 		t.Errorf("client.GetStory(8952) returned %+v, should have been empty: %+v", s, empty)
 	}
 }
-
-/*
-  s, err := client.GetStory(8412605) //=> Actual Story
-  // s, err := client.GetStory(2921983) //=> Comment (wrong type)
-  // c, err := client.GetComment(2921983) //=> Actual Comment
-  // c, err := client.GetComment(8412605) //=> Story (wrong type)
-  // p, err := client.GetPoll(126809) //=> Actual Poll
-  // p, err := client.GetPart(8412605) //=> Story (wrong type)
-  // pp, err := client.GetPart(160705) //=> Actual Part of Poll
-  // pp, err := client.GetPart(8412605) //=> Story (wrong type)
-  // u, err := client.GetUser("pg") //=> User
-*/
