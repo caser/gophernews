@@ -19,7 +19,7 @@ _cgo_export.*
 
 _testmain.go
 
-braistorming.go
+brainstorming.md
 
 *.exe
 *.test
