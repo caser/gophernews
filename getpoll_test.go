@@ -24,7 +24,7 @@ func TestGetPoll(t *testing.T) {
 
 	_ = json.Unmarshal([]byte(jsonPoll), &expected)
 
-	// Test GetStory with an actual Story's ID
+	// Test GetPoll with an actual Poll's ID
 	p, err := client.GetPoll(126809)
 
 	// Makes sure an error wasn't passed
@@ -46,14 +46,14 @@ func TestGetPoll(t *testing.T) {
 		fmt.Fprint(w, badResponse)
 	})
 
-	// Test GetStory with an ID from a non-Story object
+	// Test GetPoll with an ID from a non-Poll object
 	p, err = client.GetPoll(8952)
 	// Makes sure an error was passed
 	if err == nil {
 		t.Errorf("Error for client.GetPoll(8952) should not have been nil. Should have been a type error.")
 	}
 
-	// Checks to make sure method returns an empty Story object if the ID is bad
+	// Checks to make sure method returns an empty Poll object if the ID is bad
 	empty := Poll{}
 	if !reflect.DeepEqual(p, empty) {
 		t.Errorf("client.GetPoll(126809) returned %+v, should have been empty: %+v", p, empty)
