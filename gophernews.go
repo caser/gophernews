@@ -202,7 +202,7 @@ func (c Client) GetItem(id int) (Item, error) {
 }
 
 func (c Client) GetTop100() ([]int, error) {
-	url := c.BaseURI + c.Version + "/topstories" + c.Suffix
+	url := c.BaseURI + c.Version + "/maxitem" + c.Suffix
 
 	body := c.MakeHTTPRequest(url)
 
@@ -215,6 +215,28 @@ func (c Client) GetTop100() ([]int, error) {
 	}
 
 	return top100, nil
+}
+
+func (c Client) GetMaxItem() Item {
+	url := c.BaseURI + c.Version + "/topstories" + c.Suffix
+
+	body := c.MakeHTTPRequest(url)
+
+	var maxItemId int
+
+	err := json.Unmarshal(body, &maxItemId)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	maxItem, err := c.GetItem(maxItemId)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return maxItem
 }
 
 func (c Client) MakeHTTPRequest(url string) []byte {
