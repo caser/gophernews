@@ -85,13 +85,17 @@ func NewClient() Client {
 	var c Client
 	c.BaseURI = "https://hacker-news.firebaseio.com/"
 	c.Version = "v0"
-	c.Suffix = ".json?print=pretty"
+	c.Suffix = ".json" //?print=pretty"
 	return c
 }
 
 // Makes an API request and puts response into a Story struct
 func (c Client) GetStory(id int) (Story, error) {
-	item := c.GetItem(id)
+	item, err := c.GetItem(id)
+
+	if err != nil {
+		return Story{}, err
+	}
 
 	if item.Type != "story" {
 		emptyStory := Story{}
@@ -105,7 +109,11 @@ func (c Client) GetStory(id int) (Story, error) {
 
 // Makes an API request and puts response into a Comment struct
 func (c Client) GetComment(id int) (Comment, error) {
-	item := c.GetItem(id)
+	item, err := c.GetItem(id)
+
+	if err != nil {
+		return Comment{}, err
+	}
 
 	if item.Type != "comment" {
 		emptyComment := Comment{}
@@ -119,7 +127,11 @@ func (c Client) GetComment(id int) (Comment, error) {
 
 // Makes an API request and puts response into a Poll struct
 func (c Client) GetPoll(id int) (Poll, error) {
-	item := c.GetItem(id)
+	item, err := c.GetItem(id)
+
+	if err != nil {
+		return Poll{}, err
+	}
 
 	if item.Type != "poll" {
 		emptyPoll := Poll{}
@@ -133,7 +145,11 @@ func (c Client) GetPoll(id int) (Poll, error) {
 
 // Makes an API request and puts response into a Part struct
 func (c Client) GetPart(id int) (Part, error) {
-	item := c.GetItem(id)
+	item, err := c.GetItem(id)
+
+	if err != nil {
+		return Part{}, err
+	}
 
 	if item.Type != "pollopt" {
 		emptyPart := Part{}
@@ -156,7 +172,7 @@ func (c Client) GetUser(id string) (User, error) {
 
 	err := json.Unmarshal(body, &u)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	// TODO - other checking around errors (wrong type, nonexistent user, etc.)
@@ -165,31 +181,36 @@ func (c Client) GetUser(id string) (User, error) {
 
 // Makes an API request and puts response into a Item struct
 // Items are then converted into Stories, Comments, Polls, and Parts (of polls)
-func (c Client) GetItem(id int) Item {
+func (c Client) GetItem(id int) (Item, error) {
 	url := c.BaseURI + c.Version + "/item/" + strconv.Itoa(id) + c.Suffix
 
 	body := c.MakeHTTPRequest(url)
 
 	var i Item
 
-	err := json.Unmarshal(body, &i)
-	if err != nil {
-		panic(err)
+	if string(body) == "404 page not found" {
+		return i, fmt.Errorf("404 page not found")
 	}
 
-	return i
+	err := json.Unmarshal(body, &i)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return i, nil
 }
 
 func (c Client) MakeHTTPRequest(url string) []byte {
 	response, err := http.Get(url)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	return body
