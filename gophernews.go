@@ -201,6 +201,22 @@ func (c Client) GetItem(id int) (Item, error) {
 	return i, nil
 }
 
+func (c Client) GetTop100() ([]int, error) {
+	url := c.BaseURI + c.Version + "/topstories" + c.Suffix
+
+	body := c.MakeHTTPRequest(url)
+
+	var top100 []int
+
+	err := json.Unmarshal(body, &top100)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return top100, nil
+}
+
 func (c Client) MakeHTTPRequest(url string) []byte {
 	response, err := http.Get(url)
 	if err != nil {
