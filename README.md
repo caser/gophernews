@@ -8,6 +8,7 @@ gophernews is a Go library for accessing the HackerNews API.
 import(
   "github.com/caser/gophernews"
 )
+```
 
 Construct a new HackerNews API client, then use the various methods to access different parts of the API.
 
