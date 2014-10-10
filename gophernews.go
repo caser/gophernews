@@ -80,12 +80,17 @@ type Item struct {
 	Parts   []int
 }
 
+type Changes struct {
+	Items    []int
+	Profiles []string
+}
+
 // Initializes and returns an API client
 func NewClient() Client {
 	var c Client
 	c.BaseURI = "https://hacker-news.firebaseio.com/"
 	c.Version = "v0"
-	c.Suffix = ".json" //?print=pretty"
+	c.Suffix = ".json"
 	return c
 }
 
@@ -237,6 +242,22 @@ func (c Client) GetMaxItem() Item {
 	}
 
 	return maxItem
+}
+
+func (c Client) GetChanges() (Changes, error) {
+	url := c.BaseURI + c.Version + "/updates" + c.Suffix
+
+	body := c.MakeHTTPRequest(url)
+
+	var changes Changes
+
+	err := json.Unmarshal(body, &changes)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return changes, nil
 }
 
 func (c Client) MakeHTTPRequest(url string) []byte {

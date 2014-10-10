@@ -18,14 +18,14 @@ func TestGetTop100(t *testing.T) {
 		fmt.Fprint(w, maxItemID)
 	})
 
-	// Initialize a user with expected values
+	// Initialize Max Item ID with expected values
 	expected, err := client.GetItem(maxItemID)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// Test GetTop100
+	// Test GetMaxItem
 	maxItem := client.GetMaxItem()
 
 	// Checks to make sure request equals expected value
