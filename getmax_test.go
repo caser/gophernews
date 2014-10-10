@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestGetTop100(t *testing.T) {
+func TestGetMax(t *testing.T) {
 	setup()
 	defer teardown()
 
