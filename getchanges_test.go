@@ -1,4 +1,4 @@
-package main
+package gophernews
 
 import (
 	"encoding/json"
