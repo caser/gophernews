@@ -329,14 +329,11 @@ func (i Item) ToPart() Part {
 func main() {
 	client := NewClient()
 
+	// README
 	s, err := client.GetStory(8412605) //=> Actual Story
-	// s, err := client.GetStory(2921983) //=> Comment (wrong type)
 	// c, err := client.GetComment(2921983) //=> Actual Comment
-	// c, err := client.GetComment(8412605) //=> Story (wrong type)
 	// p, err := client.GetPoll(126809) //=> Actual Poll
-	// p, err := client.GetPart(8412605) //=> Story (wrong type)
 	// pp, err := client.GetPart(160705) //=> Actual Part of Poll
-	// pp, err := client.GetPart(8412605) //=> Story (wrong type)
 	// u, err := client.GetUser("pg") //=> User
 
 	if err != nil {
