@@ -108,7 +108,7 @@ type User struct {
 ```
 
 ## Next Steps
-This is a quick and dirty implementation of the API. Next steps will involve methods for querying relationships (story.Comments, etc.) and more info using hte API (rate limiting, etc.). 
+This is a quick and dirty implementation of the API. Next steps will involve methods for querying relationships (story.Comments, etc.) and more info using the API (rate limiting, etc.). 
 
 Contributions welcome! Write tests, implement feature, send PR.
 
