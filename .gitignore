@@ -24,3 +24,9 @@ brainstorming.md
 *.exe
 *.test
 *.prof
+
+*.swp
+*.swo
+*.swn
+
+.DS_Store
