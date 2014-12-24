@@ -32,16 +32,16 @@ type Client struct {
 //go:generate gojson -o part.go -name "Part" -pkg "gophernews" -input json/160705.json
 
 // Initializes and returns an API client
-func NewClient() Client {
+func NewClient() *Client {
 	var c Client
 	c.BaseURI = "https://hacker-news.firebaseio.com/"
 	c.Version = "v0"
 	c.Suffix = ".json"
-	return c
+	return &c
 }
 
 // Makes an API request and puts response into a Story struct
-func (c Client) GetStory(id int) (Story, error) {
+func (c *Client) GetStory(id int) (Story, error) {
 	item, err := c.GetItem(id)
 
 	if err != nil {
@@ -59,7 +59,7 @@ func (c Client) GetStory(id int) (Story, error) {
 }
 
 // Makes an API request and puts response into a Comment struct
-func (c Client) GetComment(id int) (Comment, error) {
+func (c *Client) GetComment(id int) (Comment, error) {
 	item, err := c.GetItem(id)
 
 	if err != nil {
@@ -77,7 +77,7 @@ func (c Client) GetComment(id int) (Comment, error) {
 }
 
 // Makes an API request and puts response into a Poll struct
-func (c Client) GetPoll(id int) (Poll, error) {
+func (c *Client) GetPoll(id int) (Poll, error) {
 	item, err := c.GetItem(id)
 
 	if err != nil {
@@ -95,7 +95,7 @@ func (c Client) GetPoll(id int) (Poll, error) {
 }
 
 // Makes an API request and puts response into a Part struct
-func (c Client) GetPart(id int) (Part, error) {
+func (c *Client) GetPart(id int) (Part, error) {
 	item, err := c.GetItem(id)
 
 	if err != nil {
@@ -113,7 +113,7 @@ func (c Client) GetPart(id int) (Part, error) {
 }
 
 // Makes an API request and puts response into a User struct
-func (c Client) GetUser(id string) (User, error) {
+func (c *Client) GetUser(id string) (User, error) {
 	// TODO - refactor URL call into separate method
 	url := c.BaseURI + c.Version + "/user/" + id + c.Suffix
 
@@ -135,7 +135,7 @@ func (c Client) GetUser(id string) (User, error) {
 
 // Makes an API request and puts response into a Item struct
 // Items are then converted into Stories, Comments, Polls, and Parts (of polls)
-func (c Client) GetItem(id int) (Item, error) {
+func (c *Client) GetItem(id int) (Item, error) {
 	url := c.BaseURI + c.Version + "/item/" + strconv.Itoa(id) + c.Suffix
 
 	var i map[string]interface{}
@@ -154,7 +154,7 @@ func (c Client) GetItem(id int) (Item, error) {
 	return i, err
 }
 
-func (c Client) GetTop100() ([]int, error) {
+func (c *Client) GetTop100() ([]int, error) {
 	url := c.BaseURI + c.Version + "/topstories" + c.Suffix
 
 	body, err := c.MakeHTTPRequest(url)
@@ -173,7 +173,7 @@ func (c Client) GetTop100() ([]int, error) {
 	return top100, nil
 }
 
-func (c Client) GetMaxItem() (Item, error) {
+func (c *Client) GetMaxItem() (Item, error) {
 	url := c.BaseURI + c.Version + "/maxitem" + c.Suffix
 
 	body, err := c.MakeHTTPRequest(url)
@@ -190,7 +190,7 @@ func (c Client) GetMaxItem() (Item, error) {
 	return maxItem, err
 }
 
-func (c Client) GetChanges() (Changes, error) {
+func (c *Client) GetChanges() (Changes, error) {
 	url := c.BaseURI + c.Version + "/updates" + c.Suffix
 
 	body, err := c.MakeHTTPRequest(url)
@@ -202,7 +202,7 @@ func (c Client) GetChanges() (Changes, error) {
 	return changes, err
 }
 
-func (c Client) MakeHTTPRequest(url string) ([]byte, error) {
+func (c *Client) MakeHTTPRequest(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
