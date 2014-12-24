@@ -25,13 +25,13 @@ func TestGetChanges(t *testing.T) {
 
 	err := json.Unmarshal([]byte(jsonChanges), &expected)
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	// Test GetChanges
 	c, err := client.GetChanges()
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	// Checks to make sure request equals expected value
@@ -107,11 +107,15 @@ func TestGetMax(t *testing.T) {
 	expected, err := client.GetItem(maxItemID)
 
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	// Test GetMaxItem
-	maxItem := client.GetMaxItem()
+	maxItem, err := client.GetMaxItem()
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	// Checks to make sure request equals expected value
 	if !reflect.DeepEqual(maxItem, expected) {

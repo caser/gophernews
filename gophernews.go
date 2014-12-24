@@ -171,13 +171,16 @@ func (c Client) GetUser(id string) (User, error) {
 	// TODO - refactor URL call into separate method
 	url := c.BaseURI + c.Version + "/user/" + id + c.Suffix
 
-	body := c.MakeHTTPRequest(url)
-
 	var u User
 
-	err := json.Unmarshal(body, &u)
+	body, err := c.MakeHTTPRequest(url)
 	if err != nil {
-		fmt.Println(err)
+		return u, err
+	}
+
+	err = json.Unmarshal(body, &u)
+	if err != nil {
+		return u, err
 	}
 
 	// TODO - other checking around errors (wrong type, nonexistent user, etc.)
@@ -189,90 +192,83 @@ func (c Client) GetUser(id string) (User, error) {
 func (c Client) GetItem(id int) (Item, error) {
 	url := c.BaseURI + c.Version + "/item/" + strconv.Itoa(id) + c.Suffix
 
-	body := c.MakeHTTPRequest(url)
-
 	var i Item
+
+	body, err := c.MakeHTTPRequest(url)
+	if err != nil {
+		return i, err
+	}
 
 	if string(body) == "404 page not found" {
 		return i, fmt.Errorf("404 page not found")
 	}
 
-	err := json.Unmarshal(body, &i)
+	err = json.Unmarshal(body, &i)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return i, nil
+	return i, err
 }
 
 func (c Client) GetTop100() ([]int, error) {
 	url := c.BaseURI + c.Version + "/topstories" + c.Suffix
 
-	body := c.MakeHTTPRequest(url)
+	body, err := c.MakeHTTPRequest(url)
 
 	var top100 []int
 
-	err := json.Unmarshal(body, &top100)
+	err = json.Unmarshal(body, &top100)
+	if err != nil {
+		return nil, err
+	}
 
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
 	return top100, nil
 }
 
-func (c Client) GetMaxItem() Item {
+func (c Client) GetMaxItem() (Item, error) {
 	url := c.BaseURI + c.Version + "/maxitem" + c.Suffix
 
-	body := c.MakeHTTPRequest(url)
+	body, err := c.MakeHTTPRequest(url)
 
 	var maxItemId int
 
-	err := json.Unmarshal(body, &maxItemId)
-
+	err = json.Unmarshal(body, &maxItemId)
 	if err != nil {
-		fmt.Println(err)
+		return Item{}, err
 	}
 
 	maxItem, err := c.GetItem(maxItemId)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return maxItem
+	return maxItem, err
 }
 
 func (c Client) GetChanges() (Changes, error) {
 	url := c.BaseURI + c.Version + "/updates" + c.Suffix
 
-	body := c.MakeHTTPRequest(url)
+	body, err := c.MakeHTTPRequest(url)
 
 	var changes Changes
 
-	err := json.Unmarshal(body, &changes)
+	err = json.Unmarshal(body, &changes)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return changes, nil
+	return changes, err
 }
 
-func (c Client) MakeHTTPRequest(url string) []byte {
+func (c Client) MakeHTTPRequest(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
-	return body
+	return body, nil
 }
 
 // Convert an item to a Story
@@ -337,7 +333,7 @@ func main() {
 	// u, err := client.GetUser("pg") //=> User
 
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	} else {
 		// fmt.Println(u.About, "\n", u.Created, "\n", u.Karma)
 		fmt.Println(s.By, "\n", s.Title, "\n", s.Score)
