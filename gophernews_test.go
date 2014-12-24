@@ -103,11 +103,17 @@ func TestGetMax(t *testing.T) {
 		fmt.Fprint(w, maxItemID)
 	})
 
+	// Set up API stub
+	mux.HandleFunc("/v0/item/8435557.json", func(w http.ResponseWriter, r *http.Request) {
+		result := `{"by":"jaguar86","id":8435557,"kids":[8435840,8435571,8435665],"parent":8435467,"text":"And they would like to nominate Oracle, IBM and Microsoft to take this challenge within the next 24 hours ...","time":1412898130,"type":"comment"}`
+		fmt.Fprint(w, result)
+	})
+
 	// Initialize Max Item ID with expected values
 	expected, err := client.GetItem(maxItemID)
 
 	if err != nil {
-		t.Error(err)
+		t.Errorf("Error on %d: %s", maxItemID, err)
 	}
 
 	// Test GetMaxItem

@@ -261,13 +261,16 @@ func (c Client) MakeHTTPRequest(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
-
+	if response.StatusCode == http.StatusNotFound {
+		return nil, fmt.Errorf(http.StatusText(http.StatusNotFound))
+	}
 	return body, nil
 }
 
