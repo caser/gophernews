@@ -133,9 +133,9 @@ func (c *Client) GetUser(id string) (User, error) {
 	return u, nil
 }
 
-// Makes an API request and puts response into a Item struct
-// Items are then converted into Stories, Comments, Polls, and Parts (of polls)
-func (c *Client) GetItem(id int) (Item, error) {
+// Makes an API request and puts response into a item struct
+// items are then converted into Stories, Comments, Polls, and Parts (of polls)
+func (c *Client) GetItem(id int) (item, error) {
 	url := c.BaseURI + c.Version + "/item/" + strconv.Itoa(id) + c.Suffix
 
 	var i map[string]interface{}
@@ -182,7 +182,7 @@ func (c *Client) GetMaxItem() (Item, error) {
 
 	err = json.Unmarshal(body, &maxItemId)
 	if err != nil {
-		return Item{}, err
+		return item{}, err
 	}
 
 	maxItem, err := c.GetItem(maxItemId)
@@ -221,7 +221,7 @@ func (c *Client) MakeHTTPRequest(url string) ([]byte, error) {
 }
 
 // Convert an item to a Story
-func (i Item) ToStory() Story {
+func (i item) ToStory() Story {
 	var s Story
 	s.By = i.By()
 	s.ID = i.ID()
@@ -235,7 +235,7 @@ func (i Item) ToStory() Story {
 }
 
 // Convert an item to a Comment
-func (i Item) ToComment() Comment {
+func (i item) ToComment() Comment {
 	var c Comment
 	c.By = i.By()
 	c.ID = i.ID()
@@ -248,7 +248,7 @@ func (i Item) ToComment() Comment {
 }
 
 // Convert an item to a Poll
-func (i Item) ToPoll() Poll {
+func (i item) ToPoll() Poll {
 	var p Poll
 	p.By = i.By()
 	p.ID = i.ID()
@@ -263,7 +263,7 @@ func (i Item) ToPoll() Poll {
 }
 
 // Convert an item to a Part
-func (i Item) ToPart() Part {
+func (i item) ToPart() Part {
 	var p Part
 	p.By = i.By()
 	p.ID = i.ID()
