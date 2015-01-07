@@ -9,7 +9,7 @@ import (
 
 var (
 	mux    *http.ServeMux
-	client Client
+	client *Client
 	server *httptest.Server
 )
 

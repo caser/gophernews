@@ -25,13 +25,13 @@ func TestGetChanges(t *testing.T) {
 
 	err := json.Unmarshal([]byte(jsonChanges), &expected)
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	// Test GetChanges
 	c, err := client.GetChanges()
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	// Checks to make sure request equals expected value
@@ -103,15 +103,25 @@ func TestGetMax(t *testing.T) {
 		fmt.Fprint(w, maxItemID)
 	})
 
+	// Set up API stub
+	mux.HandleFunc("/v0/item/8435557.json", func(w http.ResponseWriter, r *http.Request) {
+		result := `{"by":"jaguar86","id":8435557,"kids":[8435840,8435571,8435665],"parent":8435467,"text":"And they would like to nominate Oracle, IBM and Microsoft to take this challenge within the next 24 hours ...","time":1412898130,"type":"comment"}`
+		fmt.Fprint(w, result)
+	})
+
 	// Initialize Max Item ID with expected values
 	expected, err := client.GetItem(maxItemID)
 
 	if err != nil {
-		fmt.Println(err)
+		t.Errorf("Error on %d: %s", maxItemID, err)
 	}
 
 	// Test GetMaxItem
-	maxItem := client.GetMaxItem()
+	maxItem, err := client.GetMaxItem()
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	// Checks to make sure request equals expected value
 	if !reflect.DeepEqual(maxItem, expected) {
